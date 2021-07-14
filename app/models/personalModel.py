@@ -2,6 +2,7 @@
 from marshmallow import fields, Schema
 import datetime
 from . import db
+from ..app import bcrypt
 
 class personalModel(db.Model):
  
@@ -11,10 +12,6 @@ class personalModel(db.Model):
   name = db.Column(db.String(128), nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)
   password = db.Column(db.String(128), nullable=True)
-  results = db.Column(db.String(128), nullable=False)
-  course_name = db.Column(db.String(128), nullable=False)
-  age = db.Column(db.Integer, nullable=False)
-  student_applications = db.Column(db.Integer, nullable=False)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
 
@@ -25,11 +22,7 @@ class personalModel(db.Model):
     """
     self.name = data.get('name')
     self.email = data.get('email')
-    self.password = data.get('password')
-    self.results = data.get("results")
-    self.course_name = data.get("course_name")
-    self.age = data.get("age")
-    self.student_applications = data.get("student_applications")
+    self.password = self.__generate_hash(data.get('password'))
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
@@ -39,13 +32,21 @@ class personalModel(db.Model):
 
   def update(self, data):
     for key, item in data.items():
-      setattr(self, key, item)
-    self.modified_at = datetime.datetime.utcnow()
-    db.session.commit()
+        if key == 'password':  # add this new line
+            self.password = self.__generate_hash(value)
+        setattr(self, key, item)
+        self.modified_at = datetime.datetime.utcnow()
+        db.session.commit()
 
   def delete(self):
     db.session.delete(self)
     db.session.commit()
+
+  def __generate_hash(self, password):
+    return bcrypt.generate_password_hash(password, rounds=10).decode("utf-8")
+
+  def check_hash(self, password):
+    return bcrypt.check_password_hash(self.password, password)
 
   @staticmethod
   def get_all_students():
