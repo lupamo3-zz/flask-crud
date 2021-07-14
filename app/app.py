@@ -1,8 +1,10 @@
 
 from flask import Flask
+from flask_migrate import Migrate
 
 from .config import app_config
 from .models import db, bcrypt
+
 
 
 def create_app(env_name):
@@ -16,6 +18,8 @@ def create_app(env_name):
   """
   bcrypt.init_app(app)
   db.init_app(app)
+
+  migrate = Migrate(app, db)
 
   @app.route('/', methods=['GET'])
   def index():
