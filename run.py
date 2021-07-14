@@ -2,7 +2,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 
-from src.app import create_app
+from app.app import create_app
 
 load_dotenv(find_dotenv())
 
