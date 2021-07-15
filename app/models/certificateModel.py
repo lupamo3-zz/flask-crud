@@ -71,7 +71,7 @@ class certificateSchema(Schema):
   results = fields.Str(required=True)
   course_name = fields.Str(required=True)
   age = fields.Int(required=True)
-  student_applications = fields.Str(required=True)
+  student_applications = fields.Int(required=True)
   owner_id = fields.Int(required=True)
   created_at = fields.DateTime(dump_only=True)
   modified_at = fields.DateTime(dump_only=True)

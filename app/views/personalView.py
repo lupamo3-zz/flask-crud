@@ -30,14 +30,14 @@ def create():
   return custom_response({'jwt_token': token}, 201)
 
 @personal_api.route('/', methods=['GET'])
-# @Auth.auth_required
+@Auth.auth_required
 def get_all():
   users = personalModel.get_all_students()
   ser_users = personal_schema.dump(users, many=True)
   return custom_response(ser_users, 200)
 
 @personal_api.route('/<int:user_id>', methods=['GET'])
-# @Auth.auth_required
+@Auth.auth_required
 def get_a_user(user_id):
   """
   Get a single user
@@ -50,7 +50,7 @@ def get_a_user(user_id):
   return custom_response(ser_user, 200)
 
 @personal_api.route('/me', methods=['PUT'])
-# @Auth.auth_required
+@Auth.auth_required
 def update():
   """
   Update me
@@ -66,7 +66,7 @@ def update():
   return custom_response(ser_user, 200)
 
 @personal_api.route('/me', methods=['DELETE'])
-# @Auth.auth_required
+@Auth.auth_required
 def delete():
   """
   Delete a user
@@ -76,7 +76,7 @@ def delete():
   return custom_response({'message': 'deleted'}, 204)
 
 @personal_api.route('/me', methods=['GET'])
-# @Auth.auth_required
+@Auth.auth_required
 def get_me():
   """
   Get me
@@ -90,7 +90,6 @@ def login():
   req_data = request.get_json()
   try:
     data = personal_schema.load(req_data, partial=True)
-    print(data)
   except ValidationError as err:
         return custom_response(err, 400)
   
@@ -106,7 +105,6 @@ def login():
     return custom_response({'error': 'invalid credentials'}, 400)
   
   ser_data = personal_schema.dump(user)
-  print("show se", ser_data)
   
   # token = '304566'
   token = Auth.generate_token(ser_data.get('id'))

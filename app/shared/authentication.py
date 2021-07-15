@@ -65,6 +65,7 @@ class Auth():
           status=400
         )
       token = request.headers.get('api-token')
+      print("show token", token)
       data = Auth.decode_token(token)
       if data['error']:
         return Response(
@@ -74,7 +75,7 @@ class Auth():
         )
         
       user_id = data['data']['user_id']
-      check_user = UserModel.get_one_user(user_id)
+      check_user = personalModel.get_one_student(user_id)
       if not check_user:
         return Response(
           mimetype="application/json",
