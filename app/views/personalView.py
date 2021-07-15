@@ -56,7 +56,7 @@ def update():
   Update me
   """
   req_data = request.get_json()
-  data, error = personal_schema.load(req_data, partial=True)
+  data = personal_schema.load(req_data, partial=True)
   if error:
     return custom_response(error, 400)
 
