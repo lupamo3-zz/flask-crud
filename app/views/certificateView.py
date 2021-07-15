@@ -19,6 +19,25 @@ def create():
   data = cert_schema.dump(post).data
   return custom_response(data, 201)
 
+@certificate_api.route('/', methods=['GET'])
+def get_all():
+  """
+  Get All certificates
+  """
+  posts = certificateModel.get_all_certificates()
+  data = cert_schema.dump(posts, many=True).data
+  return custom_response(data, 200)
+
+@certificate_api.route('/<int:certificate_id>', methods=['GET'])
+def get_one(certificate_id):
+  """
+  Get A Blogpost
+  """
+  post = certificateModel.get_one_certificate(certificate_id) 
+  if not post:
+    return custom_response({'error': 'post not found'}, 404)
+  data = cert_schema.dump(post).data
+  return custom_response(data, 200)
 
 def custom_response(res, status_code):
   """

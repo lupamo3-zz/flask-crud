@@ -6,6 +6,7 @@ from .config import app_config
 from .models import db, bcrypt
 
 from .views.personalView import personal_api as personal_blueprint
+from .views.certificateView import certificate_api as certificate_blueprint
 
 def create_app(env_name):
   
@@ -21,6 +22,7 @@ def create_app(env_name):
   migrate = Migrate(app, db)
 
   app.register_blueprint(personal_blueprint, url_prefix='/api/v1/personal')
+  app.register_blueprint(certificate_blueprint, url_prefix='/api/v1/certificate')
   @app.route('/', methods=['GET'])
   def index():
     """
