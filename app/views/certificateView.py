@@ -5,6 +5,18 @@ from ..models.certificateModel import certificateModel, certificateSchema
 certificate_api = Blueprint('certificate_api', __name__)
 cert_schema = certificateSchema()
 
+MAIL_SERVER : 'localhost'
+MAIL_PORT : 25
+MAIL_USE_TLS : False
+MAIL_USE_SSL : False
+MAIL_DEBUG : app.debug
+MAIL_USERNAME : None
+MAIL_PASSWORD : None
+MAIL_DEFAULT_SENDER : None
+MAIL_MAX_EMAILS : None
+MAIL_SUPPRESS_SEND : app.testing
+MAIL_ASCII_ATTACHMENTS : False
+
 @certificate_api.route('/', methods=['POST'])
 @Auth.auth_required
 def create():
