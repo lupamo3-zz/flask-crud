@@ -3,7 +3,7 @@ from marshmallow import fields, Schema
 import datetime
 
 from . import db
-from .certificateModel import certificateModel
+from .certificateModel import certificateModel, certificateSchema
 from ..app import bcrypt
 
 
@@ -80,4 +80,4 @@ class personalSchema(Schema):
     password = fields.Str(required=True)
     created_at = fields.DateTime(dump_only=True)
     modified_at = fields.DateTime(dump_only=True)
-    certificates = fields.Nested(certificateModel, many=True)
+    certificates = fields.Nested(certificateSchema, many=True)

@@ -1,7 +1,7 @@
 
 from flask import request, json, Response, Blueprint
 from ..models.personalModel import personalModel, personalSchema
-from ..shared.Authentication import Auth
+from ..shared.authentication import Auth
 
 personal_api = Blueprint('personal', __name__)
 personal_schema = personalSchema()
@@ -12,11 +12,8 @@ def create():
   Create person Function«
   """
   req_data = request.get_json()
-  data, error = personal_schema.load(req_data)
+  data = personal_schema.load(req_data)
 
-  if error:
-    return custom_response(error, 400)
-  
   # check if user already exist in the db
   user_in_db = personalModel.get_user_by_email(data.get('email'))
   if user_in_db:
@@ -26,7 +23,7 @@ def create():
   user = personalModel(data)
   user.save()
 
-  ser_data = personal_schema.dump(user).data
+  ser_data = personal_schema.dump(user)
 
   token = Auth.generate_token(ser_data.get('id'))
 
@@ -91,11 +88,11 @@ def get_me():
 @personal_api.route('/login', methods=['POST'])
 def login():
   req_data = request.get_json()
-
-  data, error = personal_schema.load(req_data, partial=True)
-
-  if error:
-    return custom_response(error, 400)
+  try:
+    data = personal_schema.load(req_data, partial=True)
+    print(data)
+  except ValidationError as err:
+        return custom_response(err, 400)
   
   if not data.get('email') or not data.get('password'):
     return custom_response({'error': 'you need email and password to sign in'}, 400)
@@ -108,9 +105,12 @@ def login():
   if not user.check_hash(data.get('password')):
     return custom_response({'error': 'invalid credentials'}, 400)
   
-  ser_data = personal_schema.dump(user).data
+  ser_data = personal_schema.dump(user)
+  print("show se", ser_data)
   
-  token = Auth.generate_token(ser_data.get('id'))
+  token = '304566'
+  # token = Auth.generate_token(ser_data.get('id'))
+  print("showw tok", token)
 
   return custom_response({'jwt_token': token}, 200)
   

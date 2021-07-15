@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from .config import app_config
 from .models import db, bcrypt
 
-
+from .views.personalView import personal_api as personal_blueprint
 
 def create_app(env_name):
   
@@ -18,9 +18,9 @@ def create_app(env_name):
   """
   bcrypt.init_app(app)
   db.init_app(app)
-
   migrate = Migrate(app, db)
 
+  app.register_blueprint(personal_blueprint, url_prefix='/api/v1/personal')
   @app.route('/', methods=['GET'])
   def index():
     """
