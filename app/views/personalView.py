@@ -1,5 +1,5 @@
 
-from flask import request, json, Response, Blueprint
+from flask import request, json, Response, Blueprint, g
 from ..models.personalModel import personalModel, personalSchema
 from ..shared.authentication import Auth
 
@@ -30,14 +30,14 @@ def create():
   return custom_response({'jwt_token': token}, 201)
 
 @personal_api.route('/', methods=['GET'])
-@Auth.auth_required
+# @Auth.auth_required
 def get_all():
   users = personalModel.get_all_students()
-  ser_users = personal_schema.dump(users, many=True).data
+  ser_users = personal_schema.dump(users, many=True)
   return custom_response(ser_users, 200)
 
 @personal_api.route('/<int:user_id>', methods=['GET'])
-@Auth.auth_required
+# @Auth.auth_required
 def get_a_user(user_id):
   """
   Get a single user
@@ -46,11 +46,11 @@ def get_a_user(user_id):
   if not user:
     return custom_response({'error': 'user not found'}, 404)
   
-  ser_user = personal_schema.dump(user).data
+  ser_user = personal_schema.dump(user)
   return custom_response(ser_user, 200)
 
 @personal_api.route('/me', methods=['PUT'])
-@Auth.auth_required
+# @Auth.auth_required
 def update():
   """
   Update me
@@ -62,11 +62,11 @@ def update():
 
   user = personalModel.get_one_student(g.user.get('id'))
   user.update(data)
-  ser_user = personal_schema.dump(user).data
+  ser_user = personal_schema.dump(user)
   return custom_response(ser_user, 200)
 
 @personal_api.route('/me', methods=['DELETE'])
-@Auth.auth_required
+# @Auth.auth_required
 def delete():
   """
   Delete a user
@@ -76,13 +76,13 @@ def delete():
   return custom_response({'message': 'deleted'}, 204)
 
 @personal_api.route('/me', methods=['GET'])
-@Auth.auth_required
+# @Auth.auth_required
 def get_me():
   """
   Get me
   """
   user = personalModel.get_one_student(g.user.get('id'))
-  ser_user = personal_schema.dump(user).data
+  ser_user = personal_schema.dump(user)
   return custom_response(ser_user, 200)
 
 @personal_api.route('/login', methods=['POST'])
