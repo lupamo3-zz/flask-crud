@@ -61,6 +61,10 @@ class personalModel(db.Model):
   def get_one_student(id):
     return personalModel.query.get(id)
 
+  @staticmethod
+  def get_user_by_email(value):
+      return personalModel.query.filter_by(email=value).first()
+
   
   def __repr(self):
     return '<id {}>'.format(self.id)

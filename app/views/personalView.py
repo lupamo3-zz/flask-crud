@@ -32,6 +32,62 @@ def create():
 
   return custom_response({'jwt_token': token}, 201)
 
+@personal_api.route('/', methods=['GET'])
+@Auth.auth_required
+def get_all():
+  users = personalModel.get_all_students()
+  ser_users = personal_schema.dump(users, many=True).data
+  return custom_response(ser_users, 200)
+
+@personal_api.route('/<int:user_id>', methods=['GET'])
+@Auth.auth_required
+def get_a_user(user_id):
+  """
+  Get a single user
+  """
+  user = personalModel.get_one_student(user_id)
+  if not user:
+    return custom_response({'error': 'user not found'}, 404)
+  
+  ser_user = personal_schema.dump(user).data
+  return custom_response(ser_user, 200)
+
+@personal_api.route('/me', methods=['PUT'])
+@Auth.auth_required
+def update():
+  """
+  Update me
+  """
+  req_data = request.get_json()
+  data, error = personal_schema.load(req_data, partial=True)
+  if error:
+    return custom_response(error, 400)
+
+  user = personalModel.get_one_student(g.user.get('id'))
+  user.update(data)
+  ser_user = personal_schema.dump(user).data
+  return custom_response(ser_user, 200)
+
+@personal_api.route('/me', methods=['DELETE'])
+@Auth.auth_required
+def delete():
+  """
+  Delete a user
+  """
+  user = personalModel.get_one_student(g.user.get('id'))
+  user.delete()
+  return custom_response({'message': 'deleted'}, 204)
+
+@personal_api.route('/me', methods=['GET'])
+@Auth.auth_required
+def get_me():
+  """
+  Get me
+  """
+  user = personalModel.get_one_student(g.user.get('id'))
+  ser_user = personal_schema.dump(user).data
+  return custom_response(ser_user, 200)
+
 @personal_api.route('/login', methods=['POST'])
 def login():
   req_data = request.get_json()
