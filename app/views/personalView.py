@@ -110,7 +110,6 @@ def login():
   
   # token = '304566'
   token = Auth.generate_token(ser_data.get('id'))
-  print("showw tok", token)
 
   return custom_response({'jwt_token': token}, 200)
   
