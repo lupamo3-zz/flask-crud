@@ -84,7 +84,7 @@ flask run
 
 ### Test the application on Postman
 ## Test The API end-points
- - Run [iReporter](https://ireporterflask-api-heroku.herokuapp.com/) on your postman to test the URLs
+ - Run [CertificateTest](https://farifu-flask.herokuapp.com/) on your postman to test the URLs
 
 or use:
 
